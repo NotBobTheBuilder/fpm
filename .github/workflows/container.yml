@@ -19,12 +19,8 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
         with:
-          repository: jordansissel/fpm
+          repository: NotBobTheBuilder/fpm
           ref: main
-      - name: prep docker
-        run: |
-          sudo bash -c 'echo "{\"experimental\": true}" >> /etc/docker/daemon.json'
-          sudo systemctl restart docker.service
       - name: build
         run: make docker-release-everything
       - name: registry login
