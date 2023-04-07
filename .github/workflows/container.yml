@@ -10,11 +10,18 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: notbobthebuilder/fpm
 jobs:
-  release-on-push:
+  build-containers:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
+    strategy:
+      matrix:
+        include:
+          - arch: aarch64
+            distro: ubuntu_latest
+          - arch: amd64
+            distro: ubuntu_latest
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -31,5 +38,25 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: push
         run: |
-          docker image tag fpm:latest ghcr.io/notbobthebuilder/fpm:latest
-          docker image push ghcr.io/notbobthebuilder/fpm:latest
+          docker image tag fpm:latest ghcr.io/notbobthebuilder/fpm:latest-${{ matrix.arch }}
+          docker image push ghcr.io/notbobthebuilder/fpm:latest-${{ matrix.arch }}
+  push-manifest:
+    runs-on: ubuntu-latest
+    needs: build-containers
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: registry login
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: push
+        run: |
+          docker manifest create \
+          ghcr.io/notbobthebuilder/fpm:latest \
+          --amend ghcr.io/notbobthebuilder/fpm:latest-amd64 \
+          --amend ghcr.io/notbobthebuilder/fpm:latest-aarch64
+          docker manifest push ghcr.io/notbobthebuilder/fpm:latest
