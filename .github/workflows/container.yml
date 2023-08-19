@@ -22,6 +22,8 @@ jobs:
         include:
           - arch: aarch64
             distro: ubuntu_latest
+          - arch: arm64
+            distro: ubuntu_latest
           - arch: amd64
             distro: ubuntu_latest
     steps:
