@@ -22,7 +22,7 @@ jobs:
         include:
           - arch: aarch64
             distro: ubuntu_latest
-          - arch: arm64
+          - arch: arm64v8
             distro: ubuntu_latest
           - arch: amd64
             distro: ubuntu_latest
