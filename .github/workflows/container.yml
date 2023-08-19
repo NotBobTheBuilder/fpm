@@ -39,6 +39,7 @@ jobs:
           dockerRunArgs: |
             --volume "${PWD}/fpm:/fpm"
           run: |
+            apt-get install -y build-essential
             cd /fpm
             make docker-release-everything
       - name: registry login
