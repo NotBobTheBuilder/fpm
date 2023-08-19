@@ -37,7 +37,7 @@ jobs:
           distro: ${{ matrix.distro }}
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           dockerRunArgs: |
-            --volume "${PWD}/fpm:/fpm"
+            --volume "${PWD}:/fpm"
           run: |
             apt-get update
             apt-get install -y make
