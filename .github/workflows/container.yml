@@ -22,8 +22,6 @@ jobs:
         include:
           - arch: aarch64
             distro: ubuntu_latest
-          - arch: arm64v8
-            distro: ubuntu_latest
           - arch: amd64
             distro: ubuntu_latest
     steps:
@@ -33,7 +31,16 @@ jobs:
           repository: NotBobTheBuilder/fpm
           ref: main
       - name: build
-        run: make docker-release-everything
+        uses: NotBobTheBuilder/run-on-arch-action@amd64-support
+          with:
+            arch: ${{ matrix.arch }}
+            distro: ${{ matrix.distro }}
+            githubToken: ${{ secrets.GITHUB_TOKEN }}
+            dockerRunArgs: |
+              --volume "${PWD}/fpm:/fpm"
+            run: |
+              cd /fpm
+              make docker-release-everything
       - name: registry login
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
