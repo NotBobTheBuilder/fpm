@@ -40,7 +40,7 @@ jobs:
             --volume "${PWD}:/fpm"
           run: |
             apt-get update
-            apt-get install -y make
+            apt-get install -y make docker
             cd /fpm
             make docker-release-everything
       - name: registry login
