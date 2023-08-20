@@ -82,5 +82,4 @@ jobs:
           ghcr.io/notbobthebuilder/fpm:latest \
           --amend ghcr.io/notbobthebuilder/fpm:latest-amd64 \
           --amend ghcr.io/notbobthebuilder/fpm:latest-aarch64
-          --amend ghcr.io/notbobthebuilder/fpm:latest-arm64v8
           docker manifest push ghcr.io/notbobthebuilder/fpm:latest
