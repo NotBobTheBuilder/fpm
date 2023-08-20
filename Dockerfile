@@ -23,8 +23,8 @@ ARG TZ=Etc/UTC
 # Runtime deps. Build deps go in the build or test containers
 # hadolint ignore=DL3009
 RUN <<EOF
-  apt-get update
-  apt-get install --no-install-recommends --no-install-suggests -y \
+  apt-get update -qq
+  apt-get install -qq --no-install-recommends --no-install-suggests -y \
     'ruby=*' \
     'ruby-dev=*' \
     'libarchive-tools=*' \
@@ -48,7 +48,7 @@ EOF
 # conditionalized.
 FROM minimal-base as everything-base
 RUN <<EOF
-  apt-get install --no-install-recommends --no-install-suggests -y \
+  apt-get install -qq --no-install-recommends --no-install-suggests -y \
     'cpanminus=*' \
     'npm=*' \
     'perl=*' \
@@ -61,7 +61,7 @@ EOF
 FROM ${BASE_ENV}-base as base
 RUN <<EOF
   rm -rf /var/lib/apt/lists/*
-  apt-get clean
+  apt-get clean -qq
 EOF
 
 # Run tests against the current working directory. This is a bit
