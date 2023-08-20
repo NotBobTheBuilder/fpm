@@ -98,6 +98,7 @@ FROM base as release
 COPY --from=build /fpm /fpm
 ENV GEM_PATH=/fpm
 ENV PATH="/fpm/bin:${PATH}"
+RUN lscpu
 USER fpm
 WORKDIR /src
 ENTRYPOINT ["/fpm/bin/fpm"]

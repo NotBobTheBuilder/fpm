@@ -52,6 +52,7 @@ jobs:
             apt-get update
             apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
             cd /fpm
+            lscpu
             make docker-release-everything
       - name: registry login
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
