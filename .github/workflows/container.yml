@@ -21,8 +21,10 @@ jobs:
       matrix:
         include:
           - arch: aarch64
+            dockerplatform: linux/arm64/v8
             distro: ubuntu_latest
           - arch: x86_64
+            dockerplatform: linux/amd64
             distro: ubuntu_latest
     steps:
       - name: checkout
@@ -40,7 +42,7 @@ jobs:
             --volume "${PWD}:/fpm"
             --volume "/var/run/docker.sock:/var/run/docker.sock"
           run: |
-            apt-get update
+            apt-get update -qq
             apt-get install -qq -y make ca-certificates curl gnupg
             install -m 0755 -d /etc/apt/keyrings
             curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
@@ -49,11 +51,11 @@ jobs:
             "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
             "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
             tee /etc/apt/sources.list.d/docker.list > /dev/null
-            apt-get update
+            apt-get update -qq
             apt-get install -qq -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
             cd /fpm
             lscpu
-            make docker-release-everything
+            DOCKER_BUILDKIT=1 docker build -t fpm --platform ${{ matrix.dockerplatform }} --build-arg BASE_ENV=everything --build-arg TARGET=release --progress=plain .
       - name: registry login
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
