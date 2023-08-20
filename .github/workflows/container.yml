@@ -40,6 +40,7 @@ jobs:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           dockerRunArgs: |
             --volume "${PWD}:/fpm"
+            --volume "/var/run/docker.sock:/var/run/docker.sock"
           run: |
             apt-get update
             apt-get install -y make ca-certificates curl gnupg
